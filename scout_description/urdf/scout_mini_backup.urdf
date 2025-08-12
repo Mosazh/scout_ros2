@@ -184,39 +184,60 @@
   <!-- <gazebo reference="base_link">
         <material>Gazebo/Grey</material>
     </gazebo> -->
-  <ros2_control name="scout_mini_system" type="system">
-    <hardware>
-      <plugin>gz_ros2_control/GazeboSimSystem</plugin>
-    </hardware>
-    <joint name="front_left_wheel">
-      <command_interface name="velocity"/>
-      <state_interface name="position"/>
-      <state_interface name="velocity"/>
-    </joint>
-    <joint name="rear_left_wheel">
-      <command_interface name="velocity"/>
-      <state_interface name="position"/>
-      <state_interface name="velocity"/>
-    </joint>
+  <transmission name="front_right_wheel_trans" type="SimpleTransmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="front_right_wheel_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
     <joint name="front_right_wheel">
-      <command_interface name="velocity"/>
-      <state_interface name="position"/>
-      <state_interface name="velocity"/>
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
     </joint>
+  </transmission>
+  <transmission name="front_left_wheel_trans" type="SimpleTransmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="front_left_wheel_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="front_left_wheel">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+  <transmission name="rear_left_wheel_trans" type="SimpleTransmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="rear_left_wheel_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="rear_left_wheel">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+  <transmission name="rear_right_wheel_trans" type="SimpleTransmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="rear_right_wheel_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
     <joint name="rear_right_wheel">
-      <command_interface name="velocity"/>
-      <state_interface name="position"/>
-      <state_interface name="velocity"/>
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
     </joint>
-  </ros2_control>
-  <!-- 插件部分 -->
+  </transmission>
+  <!-- Controller configurations -->
   <gazebo>
-    <plugin filename="libgz_ros2_control.so" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
-      <robot_param>scout_description</robot_param>
-      <robot_param_node>scout_state_publisher</robot_param_node>
-      <parameters>$(find scout_control)/config/scout_mini_control.yaml</parameters>
+    <plugin filename="libgazebo_ros_control.so" name="gazebo_ros_control">
+      <robotNamespace>/</robotNamespace>
     </plugin>
   </gazebo>
+  <!-- kp spring constant, kd damping constant -->
+  <gazebo>
+    <mu1 value="1.0"/>
+    <mu2 value="0.9"/>
+    <kp value="10000000.0"/>
+    <kd value="1.0"/>
+    <fdir1 value="1 0 0"/>
+    <minDepth value="0.001"/>
+    <maxContacts value="64"/>
+  </gazebo>
+
+
 
  <link name="laser_link">
         <inertial>
@@ -294,11 +315,43 @@
                     <box size="0.01 0.01 0.01"/>
           </geometry>
         </collision>
-  </link>
+    </link>
 
-  <joint name="camera_joint" type="fixed">
+    <joint name="camera_joint" type="fixed">
         <origin xyz="0.2 0 0.2" rpy="0 0 0" />
         <parent link="base_link" />
         <child link="camera_link" />
-  </joint>  
+    </joint>
+
+
+  <!-- <gazebo>
+        <plugin name="skid_steer_drive_controller" filename="libgazebo_ros_skid_steer_drive.so">
+            <updateRate>100.0</updateRate>
+            <robotNamespace></robotNamespace>
+            <leftFrontJoint>front_left_wheel</leftFrontJoint>
+            <rightFrontJoint>front_right_wheel</rightFrontJoint>
+            <leftRearJoint>rear_left_wheel</leftRearJoint>
+            <rightRearJoint>rear_right_wheel</rightRearJoint>
+            <wheelSeparation>4</wheelSeparation>
+            <wheelDiameter>0.32918</wheelDiameter>
+            <robotBaseFrame>base_link</robotBaseFrame>
+            <torque>1000</torque>
+            <commandTopic>cmd_vel</commandTopic>
+            <broadcastTF>true</broadcastTF>
+            <odometryTopic>odom</odometryTopic>
+            <odometryFrame>odom</odometryFrame>
+            <covariance_x>0.000100</covariance_x>
+            <covariance_y>0.000100</covariance_y>
+            <covariance_yaw>0.010000</covariance_yaw>
+        </plugin>
+    </gazebo> -->
+  <!-- <gazebo>
+        <plugin name="object_controller" filename="libgazebo_ros_planar_move.so">
+            <commandTopic>cmd_vel</commandTopic>
+            <odometryTopic>odom</odometryTopic>
+            <odometryFrame>odom</odometryFrame>
+            <odometryRate>20.0</odometryRate>
+            <robotBaseFrame>base_footprint</robotBaseFrame>
+        </plugin>
+    </gazebo> -->
 </robot>
