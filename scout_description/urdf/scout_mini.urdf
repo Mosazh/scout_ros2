@@ -22,11 +22,7 @@
       </geometry>
     </collision>
   </link>
-  <!-- <joint name="chassis_link_joint" type="fixed">
-        <origin xyz="0 0 ${wheel_radius - wheel_vertical_offset}" rpy="0 0 0" />
-        <parent link="base_link" />
-        <child link="chassis_link" />
-    </joint> -->
+
   <link name="inertial_link">
     <inertial>
       <mass value="60"/>
@@ -39,13 +35,7 @@
     <parent link="base_link"/>
     <child link="inertial_link"/>
   </joint>
-  <!-- For testing, hang the robot up in the air -->
-  <!-- <link name="world" />
-    <joint name="world_to_base_link=" type="fixed">
-        <origin xyz="0 0 0.5" rpy="0 0 0" />
-        <parent link="world"/>
-        <child link="base_link"/>
-    </joint> -->
+  <!-- Wheels -->
   <link name="front_left_wheel_link">
 
     <inertial>
@@ -67,14 +57,13 @@
       </geometry>
     </collision>
   </link>
-  <joint name="front_left_wheel" type="continuous">
+  <joint name="front_left_wheel_joint" type="continuous">
     <parent link="base_link"/>
     <child link="front_left_wheel_link"/>
     <origin rpy="-1.57 0 0" xyz="0.2319755 0.2082515 -0.100998"/>
     <axis rpy="0 0 0" xyz="0 0 -1"/>
   </joint>
   <link name="rear_left_wheel_link">
-
     <inertial>
       <mass value="3"/>
       <origin xyz="0 0 0"/>
@@ -94,7 +83,7 @@
       </geometry>
     </collision>
   </link>
-  <joint name="rear_left_wheel" type="continuous">
+  <joint name="rear_left_wheel_joint" type="continuous">
     <!--<origin
                   xyz="-0.17453 0.20835 -0.07424"
                   rpy="0 -1.57 0" />-->
@@ -124,10 +113,7 @@
       </geometry>
     </collision>
   </link>
-  <joint name="front_right_wheel" type="continuous">
-    <!--<origin
-                  xyz="-0.17453 -0.24424 -0.07424"
-                  rpy="0 -1.57 0" />-->
+  <joint name="front_right_wheel_joint" type="continuous">
     <parent link="base_link"/>
     <child link="front_right_wheel_link"/>
     <origin rpy="1.57 0 0" xyz="0.2319755 -0.2082515 -0.099998"/>
@@ -166,7 +152,7 @@
       </geometry>
     </collision>
   </link>
-  <joint name="rear_right_wheel" type="continuous">
+  <joint name="rear_right_wheel_joint" type="continuous">
     <!--<origin
                   xyz="0.19247 -0.24486 -0.073441"
                   rpy="-0 1.57 0" />-->
@@ -176,34 +162,26 @@
     <axis rpy="0 0 0" xyz="0 0 -1"/>
   </joint>
 
-  <!-- This file is a placeholder which is included by default from
-       husky.urdf.xacro. If a robot is being customized and requires
-       additional URDF, set the HUSKY_URDF_EXTRAS environment variable
-       to the full path of the file you would like included. -->
-  <!-- Additional definitions for simulation -->
-  <!-- <gazebo reference="base_link">
-        <material>Gazebo/Grey</material>
-    </gazebo> -->
   <ros2_control name="scout_mini_system" type="system">
     <hardware>
       <plugin>gz_ros2_control/GazeboSimSystem</plugin>
     </hardware>
-    <joint name="front_left_wheel">
+    <joint name="front_left_wheel_joint">
       <command_interface name="velocity"/>
       <state_interface name="position"/>
       <state_interface name="velocity"/>
     </joint>
-    <joint name="rear_left_wheel">
+    <joint name="rear_left_wheel_joint">
       <command_interface name="velocity"/>
       <state_interface name="position"/>
       <state_interface name="velocity"/>
     </joint>
-    <joint name="front_right_wheel">
+    <joint name="front_right_wheel_joint">
       <command_interface name="velocity"/>
       <state_interface name="position"/>
       <state_interface name="velocity"/>
     </joint>
-    <joint name="rear_right_wheel">
+    <joint name="rear_right_wheel_joint">
       <command_interface name="velocity"/>
       <state_interface name="position"/>
       <state_interface name="velocity"/>
@@ -211,10 +189,10 @@
   </ros2_control>
   <!-- 插件部分 -->
   <gazebo>
-    <plugin filename="libgz_ros2_control.so" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+    <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
       <robot_param>scout_description</robot_param>
       <robot_param_node>scout_state_publisher</robot_param_node>
-      <parameters>$(find scout_control)/config/scout_mini_control.yaml</parameters>
+      <parameters>$(find scout_control)/config/scout_mini_controller.yaml</parameters>
     </plugin>
   </gazebo>
 
@@ -300,5 +278,5 @@
         <origin xyz="0.2 0 0.2" rpy="0 0 0" />
         <parent link="base_link" />
         <child link="camera_link" />
-  </joint>  
+  </joint>
 </robot>
