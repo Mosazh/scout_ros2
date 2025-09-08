@@ -70,12 +70,6 @@ def generate_launch_description():
         output='screen'
     )
 
-    world_path = PathJoinSubstitution([
-        FindPackageShare('sim_world'),
-        'worlds',
-        'agriculture.world'
-    ])
-
     return LaunchDescription([
         # Launch gazebo environment
         IncludeLaunchDescription(
@@ -83,8 +77,7 @@ def generate_launch_description():
                 [PathJoinSubstitution([FindPackageShare('ros_gz_sim'),
                                        'launch',
                                        'gz_sim.launch.py'])]),
-            # launch_arguments=[('gz_args', [' -r -v 1 empty.sdf'])]),
-            launch_arguments=[('gz_args', [' -r -v 2 ', world_path])]),
+            launch_arguments=[('gz_args', [' -r -v 1 empty.sdf'])]),
         RegisterEventHandler(
             event_handler=OnProcessExit(
                 target_action=gz_spawn_entity,
