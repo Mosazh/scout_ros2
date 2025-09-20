@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="fishros_robot">
+
+<!-- Include robot and sensor description -->
+<xacro:include filename="$(find scout_description)/urdf/base_robot.urdf.xacro" />
+<xacro:include filename="$(find scout_description)/urdf/sensor/camera.urdf.xacro" />
+<xacro:include filename="$(find scout_description)/urdf/sensor/laser.urdf.xacro" />
+<xacro:include filename="$(find scout_description)/urdf/sensor/imu.urdf.xacro" />
+
+<xacro:include filename="$(find scout_description)/urdf/actuator/wheel.urdf.xacro" />
+<xacro:include filename="$(find scout_description)/urdf/actuator/caster.urdf.xacro" />
+
+<xacro:include filename="$(find scout_description)/urdf/plugins/gazebo_control_plugin.xacro" />
+<xacro:include filename="$(find scout_description)/urdf/plugins/gazebo_sensor_plugin.xacro" />
+<xacro:include filename="$(find scout_description)/urdf/plugins/ign_sensor_plugin.xacro"/>
+
+
+<xacro:base_xacro length="0.12" radius="0.1" />
+<xacro:camera_xacro xyz="0.10 0 0.075" />
+<xacro:laser_xacro xyz="0 0 0.10" />
+<xacro:imu_xacro xyz="0 0 0.02" />
+
+<!-- <xacro:sensors_xacro
+  laser_cylinder_xyz="0 0 0.05"
+  laser_xyz="0 0 0.1"
+  laser_name="front_lidar"
+  imu_xyz="0 0 0"
+  imu_name="base_imu"/> -->
+
+<xacro:wheel_xacro wheel_name="left" xyz="0.0 0.10 -0.06" />
+<xacro:wheel_xacro wheel_name="right" xyz="0.0 -0.10 -0.06" />
+<xacro:caster_xacro caster_name="left_caster" xyz="0.08 0.0 -0.076" />
+<xacro:caster_xacro caster_name="right_caster" xyz="-.08 0.0 -0.076" />
+
+<xacro:gazebo_control_plugin />
+
+
+</robot>

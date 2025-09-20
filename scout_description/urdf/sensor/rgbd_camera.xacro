@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="lidar_robot">
+
+  <!-- 定义一个宏，可以传入父链接 -->
+  <xacro:macro name="rgbd_camera_sensor" params="parent_link xyz">
+    <link name="rgbd_camera_link">
+      <collision name="collision">
+        <geometry>
+          <box size="0.1 0.1 0.1" />
+        </geometry>
+      </collision>
+
+      <visual name="visual">
+        <geometry>
+          <box size="0.05 0.2 0.03" />
+        </geometry>
+        <material name="yellow">
+          <color rgba="1 1 0.3 0.7"/>
+        </material>
+      </visual>
+
+      <inertial>
+        <mass value="0.2"/>
+        <inertia
+          ixx="0.000333" ixy="0.0" ixz="0.0"
+          iyy="0.000333" iyz="0.0"
+          izz="0.000333"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </inertial>
+    </link>
+
+    <joint name="rgbd_camera_joint" type="fixed">
+      <parent link="${parent_link}"/>
+      <child link="rgbd_camera_link"/>
+      <origin xyz="${xyz}" rpy="0 0 0"/>
+    </joint>
+
+    <gazebo reference="rgbd_camera_link">
+      <sensor name="rgbd_camera" type="rgbd_camera">
+        <!-- <frame name="rgbd_camera_frame" attached_to='rgbd_camera_link'>
+            <pose>0 0 0 0 0 0</pose>
+        </frame>
+        <topic>rgbd</topic>
+        <update_rate>10</update_rate> -->
+
+        <camera>
+          <horizontal_fov>1.047</horizontal_fov>
+          <image>
+            <width>320</width>
+            <height>240</height>
+          </image>
+          <clip>
+            <near>0.1</near>
+            <far>100</far>
+          </clip>
+        </camera>
+        <always_on>1</always_on>
+        <update_rate>5</update_rate>
+        <visualize>true</visualize>
+        <topic>rgbd_camera</topic>
+      </sensor>
+    </gazebo>
+  </xacro:macro>
+</robot>

@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="lidar_robot">
+
+  <!-- 定义一个宏，可以传入父链接 -->
+    <xacro:macro name="imu_sensor" params="parent_link xyz">
+        <link name="imu_link">
+            <visual>
+              <geometry>
+                <box size="0.05 0.05 0.05"/>
+              </geometry>
+              <material name="cyan">
+                <color rgba="0 1 1 0.7"/>
+              </material>
+            </visual>
+            <collision>
+                  <geometry>
+                      <box size="0.05 0.05 0.05"/>
+                  </geometry>
+            </collision>
+            <inertial>
+              <origin xyz="0 0 0" rpy="0 0 0"/>
+              <mass value="0.1"/>
+              <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
+            </inertial>
+        </link>
+        <joint name="imu_joint" type="fixed">
+            <parent link="${parent_link}"/>
+            <child link="imu_link"/>
+            <origin xyz="${xyz}" rpy="0 0 0"/>
+        </joint>
+        <gazebo reference="imu_link">
+            <sensor name="imu_sensor" type="imu">
+                <always_on>1</always_on>
+                <update_rate>1</update_rate>
+                <visualize>true</visualize>
+                <topic>imu</topic>
+            </sensor>
+        </gazebo>
+    </xacro:macro>
+</robot>

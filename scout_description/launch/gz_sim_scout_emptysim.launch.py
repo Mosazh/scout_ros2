@@ -19,7 +19,7 @@ def generate_launch_description():
             ' ',
             PathJoinSubstitution(
                 [FindPackageShare('scout_description'),
-                 'urdf', 'scout_mini.urdf']
+                'urdf', 'scout_mini.urdf.xacro']
             ),
         ]
     )

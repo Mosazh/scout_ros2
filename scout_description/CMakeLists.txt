@@ -27,6 +27,7 @@ install(DIRECTORY
   config
   meshes
   urdf
+  scripts
   DESTINATION share/${PROJECT_NAME}/
 )
 

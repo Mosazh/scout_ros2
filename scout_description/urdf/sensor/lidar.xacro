@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="lidar_robot">
+
+  <!-- 定义一个宏，可以传入父链接 -->
+  <xacro:macro name="lidar_sensor" params="parent_link xyz">
+    <link name="lidar_link">
+      <visual>
+        <geometry>
+          <box size="0.1 0.1 0.1"/>
+        </geometry>
+        <material name="yellow">
+          <color rgba="1 1 0.3 0.7"/>
+        </material>
+      </visual>
+
+      <collision>
+        <geometry>
+          <box size="0.1 0.1 0.1"/>
+        </geometry>
+      </collision>
+
+      <inertial>
+        <mass value="0.4"/>
+        <inertia
+          ixx="0.01" ixy="0.0" ixz="0.0"
+          iyy="0.01" iyz="0.0"
+          izz="0.01"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </inertial>
+    </link>
+
+    <joint name="lidar_joint" type="fixed">
+      <parent link="${parent_link}"/>
+      <child link="lidar_link"/>
+      <origin xyz="${xyz}" rpy="0 0 0"/>
+    </joint>
+
+    <gazebo reference="lidar_link">
+      <sensor name='gpu_lidar' type='gpu_lidar'>"
+          <frame name="lidar_frame" attached_to='lidar_link'>
+            <pose>0 0 0 0 0 0</pose>
+          </frame>
+          <topic>lidar</topic>
+          <update_rate>5</update_rate>
+          <ray>
+              <scan>
+                  <horizontal>
+                      <samples>720</samples>
+                      <resolution>1</resolution>
+                      <min_angle>-3.141593</min_angle>
+                      <max_angle>3.141593</max_angle>
+                  </horizontal>
+                  <vertical>
+                    <samples>16</samples>
+                    <resolution>1</resolution>
+                    <min_angle>-0.261799</min_angle> <!-- -15° -->
+                    <max_angle>0.261799</max_angle>  <!-- +15° -->
+                  </vertical>
+              </scan>
+              <range>
+                  <min>0.08</min>
+                  <max>10.0</max>
+                  <resolution>0.01</resolution>
+              </range>
+          </ray>
+          <always_on>1</always_on>
+          <visualize>true</visualize>
+      </sensor>
+    </gazebo>
+  </xacro:macro>
+
+</robot>
